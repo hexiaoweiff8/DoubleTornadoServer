@@ -1,0 +1,40 @@
+{
+    "serv_id": "1",
+
+
+    "dbList" : [{
+            "level": 1,
+            "ip": "127.0.0.1",
+            "port": 10022,
+            "base_port": 10022
+        },
+        {
+            "level": 1,
+            "ip": "127.0.0.1",
+            "port": 10022,
+            "base_port": 10022
+        }
+    ],
+
+    "redis": {
+        "host": "192.168.1.132",
+        "port": 6379,
+        "db": 1
+    },
+
+
+    "log": "/",
+
+    "cookie_name": "ssk",
+
+    "cookie_secret": "iou0qw9098sda09s8adasdas09dd",
+
+    "session_list_name": "session_list",
+
+    "session_time_list_name": "session_time_list",
+
+    "session_time_out": "1800",
+
+    "request_index": "idx"
+
+}

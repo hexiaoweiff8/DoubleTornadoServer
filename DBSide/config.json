@@ -1,0 +1,48 @@
+{
+    "serv_id": "1",
+
+    "db" : {
+    "ip": "192.168.1.132",
+    "port": 10022,
+    "base_port":10022
+    },
+
+    "redis": {
+        "host": "192.168.1.132",
+        "port": 6379,
+        "db": 1
+    },
+
+
+    "mysql": {
+        "ipW": "192.168.1.132",
+        "portW": 3306,
+        "ipR": "192.168.1.132",
+        "portR": 3306,
+        "maxConnW": 1000,
+        "minConnW": 5,
+        "dbW": "ButtyNoteDB",
+        "pwdW": "root",
+        "userW": "root",
+        "dbR": "ButtyNoteDB",
+        "pwdR": "root",
+        "userR": "root",
+        "maxConnR": 1000,
+        "minConnR": 5
+    },
+
+
+    "log": "/",
+
+    "cookie_name": "ssk",
+
+    "cookie_secret": "iou0qw9098sda09s8adasdas09dd",
+
+    "session_list_name": "session_list",
+
+
+    "session_time_list_name": "session_time_list",
+
+    "session_time_out": "1800"
+
+}
