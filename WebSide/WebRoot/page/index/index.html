@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="{{static_url('jquery-1.10.2.js')}}"></script>
+    <script src="{{static_url('angular-1.5.8/angular.js')}}"></script>
+    <!--<script src="{{static_url('angular-1.5.8/ansgular-resource.js')}}"></script>-->
+
+    <script>
+        var app = angular.module('myApp', []);
+
+        // 自定义服务
+        app.service("transNum", function(){
+            this.trans = function(num){
+                return num.toString(16);
+            };
+        });
+
+        // 自定义控制器
+        app.controller('myCtrl', function($scope, transNum) {
+            $scope.firstName= "John";
+            $scope.lastName= "Doe" + transNum.trans(255);
+            $scope.callMyName = function(){
+                $scope.firstName = "Yooo";
+            };
+
+        });
+
+        // 自定义标签
+        app.directive("testDate", function(){
+            return {
+                template: "<h1>test</h1>",
+                link:function($scope,elm,attr,controller){
+                  console.log("这是link");
+                },
+                controller:function($scope,$element,$attrs){
+                  console.log("这是con");
+                }
+            }
+        });
+
+        // 自定义过滤器
+        app.filter('myFilter', function(){
+            return function(text) {
+                var newArguments= Array.prototype.slice.call(arguments);
+                return text+newArguments.join(',');
+            }
+        });
+
+        // 自定义过滤器加自定义服务
+        app.filter('myServiceFilter', ['transNum', function(transNum){
+            return function(num){
+                return transNum.trans(num);
+            };
+        }]);
+
+    </script>
+</head>
+<body>
+
+	<!--<div ng-app="main">-->
+        <!--&lt;!&ndash;&ndash;&gt;-->
+    <!--</div>-->
+    <div ng-app="myApp" ng-controller="myCtrl" ng-init="names=['Jani','Hege','Kai','John'];nums=[11,12,13,14,15,16];mySwitch=true">
+        <test-Date></test-Date>
+
+        <li ng-repeat="x in names">
+            <span ng-bind="x | myFilter"></span>
+        </li>
+        <li ng-repeat="x in nums">
+            <span ng-if="$odd" ng-bind="x | myServiceFilter">1</span>
+            <span ng-if="$even" ng-bind="x | myServiceFilter">2</span>
+        </li>
+
+        <input type="checkbox" ng-model="mySwitch"/>
+        <button ng-disabled="mySwitch" ng-show="mySwitch == true">disable</button>
+
+        <select ng-init="selectedName=names[0]" ng-model="selectedName" ng-options="x for x in names"></select>
+        <button ng-click="callMyName()">123</button>
+        名: <input type="text" ng-model="firstName" ng-click="firstName = firstName + 'yoo'"><br>
+        姓: <input type="text" ng-model="lastName"><br>
+        <br>
+        姓名:
+        <div ng-bind="firstName"/>
+    </div>
+</body>
+</html>

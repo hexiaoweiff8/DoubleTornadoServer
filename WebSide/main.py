@@ -3,7 +3,6 @@
 #!@Time     :2019/6/20 16:37
 #!@File     : .py
 
-import sys
 import tornado
 import logging
 import error
@@ -11,8 +10,9 @@ import db, config
 import cmd
 import _log
 import json
+import setting
 from tornado.options import define, options
-from tornado import ioloop, web, gen, httpserver, httpclient, websocket
+from tornado import ioloop, web, gen
 from traceback import print_exc, format_exc
 from urllib import parse
 from UtilFiles import dbs
@@ -21,6 +21,7 @@ from UtilFiles import dbs
 
 define('cfg', default='./config.json', help='debug log path', type=str)
 define('sid', default=1, help='db server id', type=int)
+
 
 '''
 代码热加载
@@ -32,6 +33,11 @@ define('sid', default=1, help='db server id', type=int)
 #         logging.info(self.request.remote_ip)
 #         reload(handler)
 
+
+class Index(tornado.web.RequestHandler):
+    @gen.coroutine
+    def get(self):
+        self.render('page/main/main.html')
 
 '''
 请求处理类
@@ -51,6 +57,10 @@ class Process(tornado.web.RequestHandler):
 
         raise gen.Return((yield handler(self.request, msgid, raw_data)))
 
+    @gen.coroutine
+    def route_to_page(self, msgid, raw_data):
+        # TODO 待开发
+        self.render('index.html', raw_data)
     '''
     get请求
     '''
@@ -64,6 +74,9 @@ class Process(tornado.web.RequestHandler):
         # TODO 处理OSS
         # TODO 处理多次请求
         # TODO 路由Post与Get请求的许可列表
+        # TODO 如果在Post列表里调用dispatch
+        # TODO 如果在Get列表里调用跳转界面/dispatch
+
         try:
             # 过滤, 防注入
             data_str = self.get_argument('data')
@@ -96,19 +109,22 @@ class Process(tornado.web.RequestHandler):
         db.closeAll()
         exit()
 
+
 '''
 启动
 '''
 if __name__ == '__main__':
     app = tornado.web.Application([
-        ('/process', Process)
-    ])
+            ('/process', Process),
+            ('/', Index)
+        ],
+        **setting.setting)
     # 处理配置参数
     options.parse_command_line()
     config.readConfig(options.cfg)
     # 初始化日志
-    _port = config.d['db']['base_port']
-    logFile = '%s_db.log' % (config.d['serv_id'])
+    _port = config.d['server']['port']
+    logFile = '%s_side.log' % (config.d['serv_id'])
     _log.init_log(config.d.get('log') + logFile, _port)
     # 注册消息
     cmd.init_request_handlers()

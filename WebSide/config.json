@@ -1,6 +1,9 @@
 {
     "serv_id": "1",
 
+    "server": {
+          "port": 8082
+    },
 
     "dbList" : [{
             "level": 1,
